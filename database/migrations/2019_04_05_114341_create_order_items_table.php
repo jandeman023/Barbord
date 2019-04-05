@@ -14,10 +14,12 @@ class CreateOrderItemsTable extends Migration
     public function up()
     {
         Schema::create('order_items', function (Blueprint $table) {
+            $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')
                 ->references('id')
-                ->on('order')
+                ->on('orders')
                 ->onDelete('RESTRICT');
+            $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
                 ->references('id')
                 ->on('products')

@@ -14,10 +14,12 @@ class CreateOrderUsersTable extends Migration
     public function up()
     {
         Schema::create('order_users', function (Blueprint $table) {
+            $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')
                 ->references('id')
                 ->on('orders')
                 ->onDelete('RESTRICT');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
