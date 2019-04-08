@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class UsersTableSeeder extends Seeder
 {
@@ -40,6 +41,54 @@ class UsersTableSeeder extends Seeder
                 'email' => str_random(10) . '@gmail.com',
                 'password' => bcrypt('secret'),
             ],
+        ]);
+
+        DB::table('orders')->insert(['id' => 0]);
+
+        DB::table('order_users')->insert([
+            [
+                'order_id' => 1,
+                'user_id' => 1,
+                'old_balance' => 0,
+                'new_balance' => 1234,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                'order_id' => 1,
+                'user_id' => 2,
+                'old_balance' => 0,
+                'new_balance' => 5732,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                'order_id' => 1,
+                'user_id' => 3,
+                'old_balance' => 0,
+                'new_balance' => 1863,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
+                'order_id' => 1,
+                'user_id' => 4,
+                'old_balance' => 0,
+                'new_balance' => 8436,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+        ]);
+
+        DB::table('order_users')->insert([
+            [
+                'order_id' => 1,
+                'user_id' => 1,
+                'old_balance' => 1234,
+                'new_balance' => 6384,
+                'created_at' => Carbon::tomorrow()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::tomorrow()->format('Y-m-d H:i:s'),
+            ]
         ]);
     }
 }

@@ -44,7 +44,12 @@ class User extends Authenticatable
 
     public function orderUser(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderUser::class)->orderBy('created_at');
+    }
+
+    public function lastOrder()
+    {
+        return $this->orderUser()->first();
     }
 
     public function group(): BelongsTo
