@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class GroupController extends Controller
 {
@@ -14,6 +15,10 @@ class GroupController extends Controller
      */
     public function index()
     {
+        if (Input::get('include') == 'users') {
+            $group = Group::with('user')->get();
+            return $group;
+        }
         return Group::all();
     }
 
@@ -30,7 +35,7 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,18 +46,23 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
+        if (Input::get('include') == 'users') {
+            $group = Group::with('user')->get();
+            $group = $group->find($id);
+            return $group;
+        }
         return Group::find($id);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -63,8 +73,8 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -75,7 +85,7 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

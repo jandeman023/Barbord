@@ -17,20 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-//        $users = OrderUser::
-//            with('User')
-//            ->get()
-//            ->sortByDesc('created_at')
-//            ->unique('user_id')
-//            ->values();
-//        return $users;
-
-        $users = User::
-            with('lastOrder')
-            ->get();
-
-//        $users = User::with('group')->get();
-        return $users;
+        return User::get();
     }
 
     /**

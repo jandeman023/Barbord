@@ -21,5 +21,5 @@ Route::get('v1/users', 'UserController@index');
 Route::get('v1/products', 'ProductController@index');
 Route::get('v1/products/{id}', 'ProductController@show');
 Route::get('v1/groups', 'GroupController@index');
-Route::get('v1/groups/{id}', 'GroupController@index');
+Route::get('v1/groups/{id}', 'GroupController@show');
 Route::post('v1/orders', 'OrderController@store');

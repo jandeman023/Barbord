@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
                 ->onDelete('RESTRICT');
             $table->string('nickname');
             $table->string('full_name');
+            $table->integer('balance');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
