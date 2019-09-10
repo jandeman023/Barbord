@@ -7,6 +7,12 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
+if(!in_array($_SERVER['REMOTE_ADDR'], array('localhost', '127.0.0.1', '::1'))){
+    $url = "/bar-api-laravel";
+} else {
+    $url = "";
+}
+
 define('LARAVEL_START', microtime(true));
 
 /*
@@ -21,7 +27,7 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/..' . $url . '/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +41,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__.'/..' . $url . '/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------

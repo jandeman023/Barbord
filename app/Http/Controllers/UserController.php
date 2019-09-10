@@ -7,6 +7,7 @@ use App\OrderUser;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
@@ -17,6 +18,27 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (isset($_GET["topBuyers"])) {
+            $orders = Order::with([
+                'OrderItem.Product:id,name',
+                'OrderUser.User:id,nickname'
+            ])->orderByDesc('created_at')->get();
+            $orderUsersArr = [];
+            foreach ($orders as $orderUser) {
+                foreach ($orderUser['OrderItem'] as $orderItem) {
+                    array_push($orderUsersArr, $orderUser['OrderUser'][0]['user_id']);
+                }
+            }
+            $counted = array_count_values($orderUsersArr);
+            arsort($counted);
+            $counted = array_slice($counted, 0, $_GET["topBuyers"], true);
+            $counter = 1;
+            foreach ($counted as $key=>$count) {
+                $counted[$key] = $counter;
+                $counter++;
+            }
+            return $counted;
+        }
         return User::get();
     }
 
@@ -38,7 +60,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new User;
+        $user->nickname = Input::get('nickname');
+        $user->full_name = Input::get('full_name');
+        $user->balance = Input::get('balance');
+        $user->email = Input::get('email');
+        $user->group_id = Input::get('group_id');
+        $user->password = bcrypt('1234');
+        $user->save();
+        return Input::all();
     }
 
     /**
@@ -72,7 +102,15 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        $user->nickname = Input::get('nickname');
+        $user->full_name = Input::get('full_name');
+        $user->balance = Input::get('balance');
+        $user->alcohol_restriction = Input::get('alcohol_restriction');
+        $user->email = Input::get('email');
+        $user->group_id = Input::get('group_id');
+        $user->save();
+        return Input::all();
     }
 
     /**
@@ -83,6 +121,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
     }
 }

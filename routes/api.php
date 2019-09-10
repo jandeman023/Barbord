@@ -16,10 +16,35 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function () {
+    Route::get('users', 'UserController@index');
+    Route::post('users', 'UserController@store');
+    Route::patch('users/{id}', 'UserController@update');
+    Route::delete('users/{id}', 'UserController@destroy');
 
-Route::get('v1/users', 'UserController@index');
-Route::get('v1/products', 'ProductController@index');
-Route::get('v1/products/{id}', 'ProductController@show');
-Route::get('v1/groups', 'GroupController@index');
-Route::get('v1/groups/{id}', 'GroupController@show');
-Route::post('v1/orders', 'OrderController@store');
+    Route::get('products', 'ProductController@index');
+    Route::get('products/{id}', 'ProductController@show');
+    Route::post('products', 'ProductController@store');
+    Route::patch('products/{id}', 'ProductController@update');
+    Route::delete('products/{id}', 'ProductController@destroy');
+
+    Route::get('groups', 'GroupController@index');
+    Route::get('groups/{id}', 'GroupController@show');
+
+    Route::get('orders', 'OrderController@index');
+    Route::post('orders', 'OrderController@store');
+});;
+
+Route::group([
+    'prefix' => 'v1/auth'
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('signup', 'AuthController@signup');
+
+    Route::group([
+        'middleware' => 'auth:api'
+    ], function() {
+        Route::get('logout', 'AuthController@logout');
+        Route::get('user', 'AuthController@user');
+    });
+});
