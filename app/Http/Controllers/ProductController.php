@@ -15,7 +15,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        if (isset($_GET['all'])) {
+            return Product::all();
+        }
+        return Product::where('active', 1)->get();
     }
 
     /**
@@ -76,6 +79,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
+        $product->active = Input::get('active');
         $product->name = Input::get('name');
         $product->price = Input::get('price');
         $product->alcoholic = Input::get('alcoholic');
