@@ -39,7 +39,7 @@ class UserController extends Controller
             }
             return $counted;
         }
-        return User::get();
+        return User::orderBy('nickname')->get();
     }
 
     /**
@@ -64,6 +64,7 @@ class UserController extends Controller
         $user->nickname = Input::get('nickname');
         $user->full_name = Input::get('full_name');
         $user->balance = Input::get('balance');
+        $user->alcohol_restriction = Input::get('alcohol_restriction');
         $user->email = Input::get('email');
         $user->group_id = Input::get('group_id');
         $user->password = bcrypt('1234');

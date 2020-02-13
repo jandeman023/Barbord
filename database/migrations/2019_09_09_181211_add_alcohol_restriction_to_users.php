@@ -14,7 +14,8 @@ class AddAlcoholRestrictionToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('alcohol_restriction');
+            $table->boolean('alcohol_restriction')
+            ->default(0);
         });
     }
 
