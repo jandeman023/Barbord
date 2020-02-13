@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\LowBalance;
 use App\Order;
 use App\OrderItem;
 use App\OrderUser;
@@ -19,7 +20,39 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::with(['OrderItem.Product:id,name', 'OrderUser.User:id,nickname'])->orderByDesc('created_at')->get();
+        if (isset($_GET["count"])) {
+            return Order::with([
+                'OrderItem.Product:id,name',
+                'OrderUser.User:id,nickname'
+            ])->orderByDesc('created_at')->take($_GET["count"])->get();
+        } elseif (isset($_GET['csv'])) {
+            $orders =  Order::with([
+                'OrderItem.Product:id,name',
+                'OrderUser.User:id,nickname'
+            ])->orderByDesc('created_at')->get();
+
+            foreach ($orders as $order) {
+                $orderItems = [];
+                foreach ($order['OrderItem'] as $orderItem) {
+                    array_push($orderItems, $orderItem['product']['name']);
+                }
+                $order['OrderItem'] = $orderItems;
+
+                $orderUsers = [];
+                foreach ($order['OrderUser'] as $orderUser) {
+                    array_push($orderUsers, $orderUser['user']['nickname']);
+                }
+                $order['OrderUser'] = $orderUsers;
+            }
+            unset($orders['order_item']);
+            return($orders);
+        }
+
+        return Order::with([
+            'OrderItem.Product:id,name',
+            'OrderUser.User:id,nickname'
+        ])->orderByDesc('created_at')->get();
+
     }
 
     /**
@@ -68,6 +101,11 @@ class OrderController extends Controller
                 foreach (Input::get('users') as $user) {
                     $oldBalance = User::find($user)->balance;
                     $newBalance = $oldBalance - $totalPrice;
+
+//                    if ($oldBalance < 10 && $newBalance > 10) {
+//                        return $user->email;
+//                        Mail::to($request->user())->send(new LowBalance());
+//                    }
 
                     $flight = User::find($user);
                     $flight->balance = $newBalance;
