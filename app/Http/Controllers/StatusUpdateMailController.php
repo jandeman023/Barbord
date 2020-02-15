@@ -26,7 +26,6 @@ class StatusUpdateMailController extends Controller
 
         foreach ($users as $user) {
             Mail::to($user->email)->send(new StatusUpdate($user));
-            sleep(0.1);
         }
     }
 }
