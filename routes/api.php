@@ -33,6 +33,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function () {
 
     Route::get('orders', 'OrderController@index');
     Route::post('orders', 'OrderController@store');
+
+    Route::get('statusupdatemail', 'StatusUpdateMailController@index');
 });;
 
 Route::group([
