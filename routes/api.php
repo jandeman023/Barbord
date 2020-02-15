@@ -33,6 +33,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function () {
 
     Route::get('orders', 'OrderController@index');
     Route::post('orders', 'OrderController@store');
+
+    Route::get('payment', 'PaymentController@index');
+    Route::post('payment', 'PaymentController@store');
 });;
 
 Route::group([
