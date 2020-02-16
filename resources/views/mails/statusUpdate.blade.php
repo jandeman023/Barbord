@@ -356,7 +356,7 @@
     </style>
 </head>
 <body class="">
-<span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
+<span class="preheader">Hierbij uw maandelijke overzicht van het barsysteem.</span>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
     <tr>
         <td>&nbsp;</td>
@@ -381,7 +381,8 @@
                                                 <td>
                                                     @if($user->orders != "[]")
                                                         <p>Hieronder zult je al uw bestellingen terugvinden die je vanaf het ingaan van het nieuwe systeem heeft
-                                                            gekocht. Dit overzicht is van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
+                                                            gekocht. Dit overzicht is
+                                                            van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
                                                             tot {{ \Carbon\Carbon::now()->firstOfMonth()->toDateString() }}</p>
                                                         <table>
                                                             <tr>
@@ -397,7 +398,8 @@
                                                             @endforeach
                                                         </table>
                                                     @else
-                                                        Je heb niets gekocht in de periode van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
+                                                        Je heb niets gekocht in de periode
+                                                        van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
                                                         tot {{ \Carbon\Carbon::now()->firstOfMonth()->toDateString() }}.
                                                     @endif
                                                 </td>
@@ -420,7 +422,7 @@
                         <tr>
                             <td class="content-block">
                                 <span class="apple-link">Made by Jan Overbeek, Scouting Brigitta</span>
-                                <br> Deze mails niet meer ontvangen? <a href="https://www.youtube.com/watch?v=2Z4m4lnjxkY">Uitschrijven</a>.
+                                <br> Deze mails niet meer ontvangen? <a href="https://www.hva.nl/uitschrijven">Uitschrijven</a>.
                             </td>
                         </tr>
                     </table>
@@ -434,5 +436,3 @@
 </table>
 </body>
 </html>
-
-{{--{{ dd($user) }}--}}
