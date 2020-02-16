@@ -19,7 +19,8 @@ class StatusUpdateMailController extends Controller
     {
         $users = User::with([
             'orders' => function ($orders) {
-                $orders->whereBetween('orders.created_at', [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->firstOfMonth()]);
+                $orders->whereBetween('orders.created_at',
+                    [Carbon::now()->startOfMonth()->subMonth(), Carbon::now()->firstOfMonth()]);
             },
             'orders.products'
         ])->get();
@@ -27,5 +28,7 @@ class StatusUpdateMailController extends Controller
         foreach ($users as $user) {
             Mail::to($user->email)->send(new StatusUpdate($user));
         }
+
+        return "mails has been send";
     }
 }
