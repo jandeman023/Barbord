@@ -32,6 +32,10 @@ class StatusUpdate extends Mailable
      */
     public function build()
     {
-        return $this->from('barboard@scoutingbrigitta.nl')->view('mails.statusUpdate')->with(["user" => $this->user]);
+        return $this->from('barsysteem@rwebs.nl')
+            ->subject('Maandelijkse baroverzicht')
+            ->view('mails.statusUpdate')
+            ->text('mails.statusUpdatePlain')
+            ->with(["user" => $this->user]);
     }
 }
