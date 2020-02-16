@@ -36,6 +36,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function () {
 
     Route::get('payment', 'PaymentController@index');
     Route::post('payment', 'PaymentController@store');
+    
+    Route::get('statusupdatemail', 'StatusUpdateMailController@index');
 });;
 
 Route::group([
