@@ -104,6 +104,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
+        $user->active = Input::get('active');
         $user->nickname = Input::get('nickname');
         $user->full_name = Input::get('full_name');
         $user->balance = Input::get('balance');
