@@ -17,7 +17,11 @@ class PaymentController extends Controller
     public function index()
     {
 //        pay.nl integration
-        if (isset($_GET["start"])) {
+        if (isset($_GET["start"]) && isset($_GET['amount']) && isset($_GET['userId'])) {
+            $userId = $_GET['userId'];
+            $amount = $_GET['amount'];
+            $transactionCosts = 39;
+
             # Setup API Url
             $payData['format'] = 'json';
             $payData['tokenid'] = 'AT-0052-2517';
@@ -33,9 +37,9 @@ class PaymentController extends Controller
             # Add arguments
             $arrArguments = array();
             $arrArguments['serviceId'] = 'SL-6778-8391';
-            $arrArguments['amount'] = 1234;
+            $arrArguments['amount'] = $amount + $transactionCosts;
             $arrArguments['ipAddress'] = $_SERVER['REMOTE_ADDR'];
-            $arrArguments['finishUrl'] = 'https://bar-new.scoutingbrigitta.nl/';
+            $arrArguments['finishUrl'] = 'https://bar-api.scoutingbrigitta.nl/api/v1/payment?process&amount=' . $amount . '&userId=' . $userId;
             $arrArguments['paymentOptionId'] = 10;
 
             # Prepare complete API URL
@@ -43,8 +47,25 @@ class PaymentController extends Controller
 
             # Get API result
             $strResult = @file_get_contents($strUrl);
-            return $strResult;
+            $jsonResult = json_decode($strResult, true);
+            $paymentUrl = $jsonResult['transaction']['paymentURL'];
+            return redirect($paymentUrl);
         }
+
+        if (isset($_GET["process"]) && isset($_GET['amount']) && isset($_GET['userId']) && $_GET['orderStatusId'] == 100) {
+            $request = new Request();
+            $request->request->add([
+                'id' => $_GET['userId'],
+                'amount' => $_GET['amount'],
+                'payOrderId' => $_GET['orderId']
+            ]);
+            return $this->store($request);
+        }
+
+        if (isset($_GET["process"]) && isset($_GET['amount']) && isset($_GET['userId']) && $_GET['orderStatusId'] !== 100) {
+            return "Iets ging er mis. Of met de betaling of met het systeem. Wanneer er toch geld van uw bankerekening is afgehaald, contact dan de admin van dit barsysteem.";
+        }
+
         return Payment::with('User:id,full_name')->orderByDesc('created_at')->get();
     }
 
@@ -66,8 +87,16 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $id = Input::get('id');
-        $amount = Input::get('amount');
+
+        $id = $request->request->get('id');
+        $amount = $request->request->get('amount');
+        if ($request->request->get('payOrderId')) {
+            $payOrderId = $request->request->get('payOrderId');
+
+            if (Payment::where('pay_order_id', '=', $payOrderId)->exists()) {
+                return "Uw nieuwe balance is al toegevoegd aan uw saldo.";
+            }
+        }
 
         $oldBalance = User::find($id)->balance;
         $newBalance = $oldBalance + $amount;
@@ -77,11 +106,18 @@ class PaymentController extends Controller
         $payment->old_balance = $oldBalance;
         $payment->new_balance = $newBalance;
         $payment->amount = $amount;
+        if ($request->request->get('payOrderId')) {
+            $payment->pay_order_id = $payOrderId;
+        }
         $payment->save();
 
         $user = User::find($id);
         $user->balance = $newBalance;
         $user->save();
+
+        if ($request->request->get('payOrderId')) {
+            return "Uw betaalde bedrag is met succes toegevoegd aan uw saldo";
+        }
 
         return Input::all();
     }

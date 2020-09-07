@@ -373,8 +373,19 @@
                                 <tr>
                                     <td>
                                         <p>Hi {{ $user->full_name }},</p>
-                                        <p>Namens de barcommisie willen wij graag je jouw overzicht van van het barsysteem aanbieden.</p>
+                                        <p>Namens de barcommisie willen wij graag je jouw overzicht van het barsysteem aanbieden.</p>
                                         <p>Je huidige saldo is: <b>€{{ $user->balance / 100 }}</b></p>
+                                        <p>Wil je je saldo opwaarderen? Dat kan! (houd rekening met 39 cent transactiekosten!)</p>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=500&userId={{ $user->id }}">Saldo met 5 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=1000&userId={{ $user->id }}">Saldo met 10 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=2000&userId={{ $user->id }}">Saldo met 20 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=3000&userId={{ $user->id }}">Saldo met 30 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=4000&userId={{ $user->id }}">Saldo met 40 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=5000&userId={{ $user->id }}">Saldo met 50 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=7500&userId={{ $user->id }}">Saldo met 75 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=10000&userId={{ $user->id }}">Saldo met 100 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=12500&userId={{ $user->id }}">Saldo met 125 euro ophogen</a><br>
+                                        <a target="_blank" href="https://bar-api.scoutingbrigitta.nl/api/v1/payment?start&amount=15000&userId={{ $user->id }}">Saldo met 150 euro ophogen</a><br><br>
                                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="">
                                             <tbody>
                                             <tr>
@@ -398,14 +409,19 @@
                                                             @endforeach
                                                         </table>
                                                     @else
+                                                        <p>
                                                         Je heb niets gekocht in de periode
                                                         van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
                                                         tot {{ \Carbon\Carbon::now()->firstOfMonth()->toDateString() }}.
+                                                        </p>
                                                     @endif
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
+                                        <p>Handmatig geld storten zonder transactiekosten te betalen? Dat kan ook!<br>
+                                        L.b. Van Iperen<br>
+                                        NL02 RABO 0148132502</p>
                                     </td>
                                 </tr>
                             </table>
