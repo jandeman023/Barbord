@@ -18,7 +18,7 @@ class ProductController extends Controller
         if (isset($_GET['all'])) {
             return Product::all();
         }
-        return Product::where('active', 1)->get();
+        return Product::where('active', 1)->orderBy('sequence', 'ASC')->get();
     }
 
     /**
@@ -43,6 +43,7 @@ class ProductController extends Controller
         $product->name = Input::get('name');
         $product->price = Input::get('price');
         $product->alcoholic = Input::get('alcoholic');
+        $product->sequence = Input::get('sequence');
         $product->save();
         return Input::all();
     }
@@ -83,6 +84,7 @@ class ProductController extends Controller
         $product->name = Input::get('name');
         $product->price = Input::get('price');
         $product->alcoholic = Input::get('alcoholic');
+        $product->sequence = Input::get('sequence');
         $product->save();
         return Input::all();
     }
