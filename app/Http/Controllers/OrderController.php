@@ -9,6 +9,7 @@ use App\OrderUser;
 use App\Product;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class OrderController extends Controller
@@ -26,7 +27,7 @@ class OrderController extends Controller
                 'OrderUser.User:id,nickname'
             ])->orderByDesc('created_at')->take($_GET["count"])->get();
         } elseif (isset($_GET['csv'])) {
-            $orders =  Order::with([
+            $orders = Order::with([
                 'OrderItem.Product:id,name',
                 'OrderUser.User:id,nickname'
             ])->orderByDesc('created_at')->get();
@@ -45,7 +46,32 @@ class OrderController extends Controller
                 $order['OrderUser'] = $orderUsers;
             }
             unset($orders['order_item']);
-            return($orders);
+            return ($orders);
+        } elseif (isset($_GET['totalProductsOrdered'])) {
+            $count = 0;
+            $orders = Order::withCount(['OrderItem', 'OrderUser'])->get();
+            foreach ($orders as $order) {
+                $totalProductsOrdered = $order->order_item_count * $order->order_user_count;
+                $count = $count + $totalProductsOrdered;
+            }
+            return $count;
+        } elseif (isset($_GET['monthlyChart'])) {
+            $orders = Order::select(DB::raw('count(id) as `data`'), DB::raw("CONCAT_WS('-',YEAR(created_at),MONTH(created_at)) as monthyear"))
+                ->groupby('monthyear')
+                ->get();
+
+            $series = [];
+            $labels = [];
+            foreach ($orders as $order) {
+                array_push($labels, $order->monthyear);
+                array_push($series, $order->data);
+            }
+
+            $data = [];
+            array_push($data, $labels);
+            array_push($data, $series);
+
+            return $data;
         }
 
         return Order::with([
@@ -68,7 +94,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -132,7 +158,7 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -143,7 +169,7 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -154,8 +180,8 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -166,7 +192,7 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
