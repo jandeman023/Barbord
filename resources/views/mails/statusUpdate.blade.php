@@ -391,8 +391,7 @@
                                             <tr>
                                                 <td>
                                                     @if($user->orders != "[]")
-                                                        <p>Hieronder zult je al uw bestellingen terugvinden die je vanaf het ingaan van het nieuwe systeem heeft
-                                                            gekocht. Dit overzicht is
+                                                        <p>Dit overzicht is
                                                             van {{ \Carbon\Carbon::now()->startOfMonth()->subMonth()->toDateString() }}
                                                             tot {{ \Carbon\Carbon::now()->firstOfMonth()->toDateString() }}</p>
                                                         <table>
