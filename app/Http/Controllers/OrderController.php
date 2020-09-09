@@ -72,6 +72,33 @@ class OrderController extends Controller
             array_push($data, $series);
 
             return $data;
+
+        } elseif (isset($_GET['productChart'])) {
+            $orders = Order::withCount('OrderUser')->with('products')->get();
+
+            $productArray = [];
+
+            foreach($orders as $order) {
+                foreach ($order->products as $product) {
+                    if (array_key_exists($product->name, $productArray)) {
+                        $productArray[$product->name] = $productArray[$product->name] + 1;
+                    } else {
+                        $productArray[$product->name] = 1;
+                    }
+                }
+            }
+
+            arsort($productArray);
+
+            $labels = array_keys($productArray);
+            $series = array_values($productArray);
+
+            $data = [];
+            array_push($data, $labels);
+            array_push($data, $series);
+
+            return $data;
+
         }
 
         return Order::with([
