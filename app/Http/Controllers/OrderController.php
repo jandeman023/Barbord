@@ -56,16 +56,27 @@ class OrderController extends Controller
             }
             return $count;
         } elseif (isset($_GET['monthlyChart'])) {
-            $orders = Order::select(DB::raw('count(id) as `data`'), DB::raw("CONCAT_WS('-',YEAR(created_at),MONTH(created_at)) as monthyear"))
-                ->groupby('monthyear')
-                ->get();
+            $orders = Order::withCount(['OrderItem', 'OrderUser'])->get();
 
-            $series = [];
-            $labels = [];
+            $orders = $orders->map(function ($order) {
+                return [
+                    'order_item_count' => $order->order_item_count,
+                    'order_user_count' => $order->order_user_count,
+                    'date' => $order->created_at->format('Y-m')
+                ];
+            });
+
+            $orderArray = [];
             foreach ($orders as $order) {
-                array_push($labels, $order->monthyear);
-                array_push($series, $order->data);
+                if (array_key_exists($order['date'], $orderArray)) {
+                    $orderArray[$order['date']] = $orderArray[$order['date']] + ($order['order_item_count'] * $order['order_user_count']);
+                } else {
+                    $orderArray[$order['date']] = ($order['order_item_count'] * $order['order_user_count']);
+                }
             }
+
+            $labels = array_keys($orderArray);
+            $series = array_values($orderArray);
 
             $data = [];
             array_push($data, $labels);
