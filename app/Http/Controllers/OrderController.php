@@ -110,6 +110,19 @@ class OrderController extends Controller
 
             return $data;
 
+        } elseif (isset($_GET['multiStreepPercentage'])) {
+            $orders = Order::withCount('OrderUser')->get();
+            $totalOrders = count($orders);
+            $totalMultiStreep = 0;
+
+            foreach ($orders as $order) {
+                if ($order->order_user_count > 1) {
+                    $totalMultiStreep = $totalMultiStreep + 1;
+                }
+            }
+
+            $multiStreepPercentage = ($totalMultiStreep / $totalOrders) * 100;
+            return round($multiStreepPercentage, 2);
         }
 
         return Order::with([
