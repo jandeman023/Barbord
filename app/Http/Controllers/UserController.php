@@ -38,8 +38,12 @@ class UserController extends Controller
                 $counter++;
             }
             return $counted;
+        } elseif (isset($_GET['all'])) {
+            return User::orderBy('nickname')->get();
+
         }
-        return User::orderBy('nickname')->get();
+
+        return User::where('active', 1)->orderBy('nickname')->get();
     }
 
     /**
