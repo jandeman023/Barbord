@@ -78,7 +78,7 @@ class OrderController extends Controller
 
             $productArray = [];
 
-            foreach($orders as $order) {
+            foreach ($orders as $order) {
                 foreach ($order->products as $product) {
                     if (array_key_exists($product->name, $productArray)) {
                         $productArray[$product->name] = $productArray[$product->name] + 1;
