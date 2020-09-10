@@ -123,6 +123,25 @@ class OrderController extends Controller
 
             $multiStreepPercentage = ($totalMultiStreep / $totalOrders) * 100;
             return round($multiStreepPercentage, 2);
+
+        } elseif (isset($_GET['totalRevenue'])) {
+            $orders = Order::withCount('OrderUser')->with('products')->get();
+            $totalRevenue = 0;
+
+            foreach ($orders as $order) {
+                $totalOrderAmount = 0;
+                foreach ($order->products as $product) {
+                    $totalOrderAmount = $totalOrderAmount + $product->price;
+                }
+                $totalRevenue = $totalRevenue + ($totalOrderAmount * $order->order_user_count);
+            }
+
+            return $totalRevenue;
+
+        } elseif (isset($_GET['totalOrders'])) {
+            $orders = Order::count();
+            return $orders;
+
         }
 
         return Order::with([
